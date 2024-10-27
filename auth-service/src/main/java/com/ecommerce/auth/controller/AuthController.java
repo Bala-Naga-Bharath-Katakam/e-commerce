@@ -14,6 +14,7 @@ import com.ecommerce.auth.security.services.UserDetailsImpl;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -89,6 +90,35 @@ public class AuthController {
         userRepository.save(user);
 
         return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
+    }
+
+    @GetMapping("/validate")
+    public ResponseEntity<?> validateToken(@RequestHeader(HttpHeaders.AUTHORIZATION) String token) {
+        try {
+            // Remove "Bearer " prefix if it exists
+            String jwt = token.startsWith("Bearer ") ? token.substring(7) : token;
+
+            // Validate token and extract username
+            if (jwtUtils.validateJwtToken(jwt)) {
+                String username = jwtUtils.getUserNameFromJwtToken(jwt);
+                User user = userRepository.findByUserName(username)
+                        .orElseThrow(() -> new RuntimeException("User not found"));
+
+                UserInfoResponse response = new UserInfoResponse(
+                        user.getId(),
+                        user.getUserName(),
+                        user.getRoles().stream()
+                                .map(role -> role.getRoleName().name()) // Use name() if getRoleName() returns an enum
+                                .collect(Collectors.toList())
+                );
+
+                return ResponseEntity.ok(response);
+            } else {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid JWT token");
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized: " + e.getMessage());
+        }
     }
 
     @GetMapping("/user")
