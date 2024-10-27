@@ -1,0 +1,23 @@
+spring:
+  application:
+    name: auth-service
+  ecom:
+    app:
+      jwtCookieName: springBootEcom
+  app:
+    jwtExpirationMs: 3000000
+    jwtSecret: mySecretKey123912738aopsgjnspkmndfsopkvajoirjg94gf2opfng2moknm
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
+    registerWithEureka: true
+    fetchRegistry: true
+
+  instance:
+    preferIpAddress: true
+    ip-address: 127.0.0.1
+    nonSecurePort: 8080
+    leaseRenewalIntervalInSeconds: 30
+    leaseExpirationDurationInSeconds: 90
