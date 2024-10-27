@@ -1,26 +1,39 @@
 server:
-  port: 8080
+  port: 1010
 spring:
-  application:
-    name: api-gateway
   cloud:
     gateway:
+      discovery:
+        locator:
+          enabled: true
       routes:
-        - id: user-service
-          uri: lb://USER-SERVICE
+        - id: auth-service
+          uri: lb://AUTH-SERVICE  # Use service name if using Eureka
           predicates:
-            - Path=/users/**
+            - Path=/api/auth/**
         - id: product-service
-          uri: lb://PRODUCT-SERVICE
+          uri: lb://PRODUCTS-SERVICE
           predicates:
             - Path=/products/**
-        - id: cart-service
-          uri: lb://CART-SERVICE
-          predicates:
-            - Path=/carts/**
-        - id: order-service
-          uri: lb://ORDER-SERVICE
-          predicates:
-            - Path=/orders/**
   security:
     filter-order: 0
+  application:
+    name: api-gateway
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
+    registerWithEureka: true
+    fetchRegistry: true
+
+  instance:
+    preferIpAddress: true
+    ip-address: 127.0.0.1
+    nonSecurePort: 8080
+    leaseRenewalIntervalInSeconds: 30
+    leaseExpirationDurationInSeconds: 90
+
+
+jwt:
+  secret: mySecretKey123912738aopsgjnspkmndfsopkvajoirjg94gf2opfng2moknm
