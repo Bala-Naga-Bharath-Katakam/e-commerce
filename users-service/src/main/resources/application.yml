@@ -1,5 +1,5 @@
 server:
-  port: 8081
+  port: 7070
 spring:
   application:
     name: users-service
@@ -12,9 +12,7 @@ spring:
     console:
       enabled: true
   r2dbc:
+    generate-ddl: true
     url: r2dbc:h2:mem:///testdb
     username: sa
     password:
-
-  app:
-    jwtSecret=mySecretKey123912738aopsgjnspkmndfsopkvajoirjg94gf2opfng2moknm:

@@ -1,0 +1,87 @@
+{
+  "info": {
+    "_postman_id": "e32fd40a-5b90-4af1-93e6-c00840756bcf",
+    "name": "Ecommerce User Address API",
+    "description": "Postman collection for testing the User Address API.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Add Address",
+      "request": {
+        "url": "http://localhost:8080/api/user-address/addresses",
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer YOUR_JWT_TOKEN",
+            "type": "text"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"building_name\": \"Main Building\", \"city\": \"New York\", \"country\": \"USA\", \"pincode\": \"10001\", \"state\": \"NY\", \"street\": \"123 Main St\"}"
+        },
+        "description": "Add a new address for the user."
+      },
+      "response": []
+    },
+    {
+      "name": "Add User Address",
+      "request": {
+        "url": "http://localhost:8080/api/user-address/{userId}/addresses/{addressId}",
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer YOUR_JWT_TOKEN",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": ""
+        },
+        "description": "Link an existing address to a user."
+      },
+      "response": []
+    },
+    {
+      "name": "Get Addresses by User ID",
+      "request": {
+        "url": "http://localhost:8080/api/user-address/{userId}/addresses",
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer YOUR_JWT_TOKEN",
+            "type": "text"
+          }
+        ],
+        "description": "Retrieve all addresses linked to a user."
+      },
+      "response": []
+    },
+    {
+      "name": "Delete Address",
+      "request": {
+        "url": "http://localhost:8080/api/user-address/addresses/{addressId}",
+        "method": "DELETE",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer YOUR_JWT_TOKEN",
+            "type": "text"
+          }
+        ],
+        "description": "Delete an address by ID."
+      },
+      "response": []
+    }
+  ]
+}

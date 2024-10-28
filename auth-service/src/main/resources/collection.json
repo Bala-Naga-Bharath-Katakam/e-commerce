@@ -1,140 +1,149 @@
 {
   "info": {
-    "_postman_id": "12345678-1234-1234-1234-123456789012",
-    "name": "eCommerce API",
-    "description": "Postman collection for eCommerce User and Role management",
+    "name": "E-commerce Auth API",
+    "_postman_id": "unique-identifier",
+    "description": "Collection for E-commerce Auth API endpoints.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "item": [
     {
-      "name": "User Operations",
-      "item": [
-        {
-          "name": "Create User",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\"userName\":\"john_doe\",\"email\":\"john@example.com\",\"password\":\"password123\"}"
-            },
-            "url": "{{baseUrl}}/users"
-          },
-          "response": []
+      "name": "Authenticate User",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"username\": \"your_username\",\n    \"password\": \"your_password\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
         },
-        {
-          "name": "Get All Users",
-          "request": {
-            "method": "GET",
-            "url": "{{baseUrl}}/users"
-          },
-          "response": []
-        },
-        {
-          "name": "Get User by ID",
-          "request": {
-            "method": "GET",
-            "url": "{{baseUrl}}/users/1"
-          },
-          "response": []
-        },
-        {
-          "name": "Update User",
-          "request": {
-            "method": "PUT",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\"userName\":\"john_doe_updated\",\"email\":\"john_new@example.com\",\"password\":\"newpassword123\"}"
-            },
-            "url": "{{baseUrl}}/users/1"
-          },
-          "response": []
-        },
-        {
-          "name": "Delete User",
-          "request": {
-            "method": "DELETE",
-            "url": "{{baseUrl}}/users/1"
-          },
-          "response": []
+        "url": {
+          "raw": "http://localhost:8080/api/auth/signin",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "auth",
+            "signin"
+          ]
         }
-      ]
+      },
+      "response": []
     },
     {
-      "name": "Role Operations",
-      "item": [
-        {
-          "name": "Create Role",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\"roleName\":\"ROLE_USER\"}"
-            },
-            "url": "{{baseUrl}}/roles"
-          },
-          "response": []
+      "name": "Register User",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"username\": \"new_username\",\n    \"email\": \"user@example.com\",\n    \"password\": \"your_password\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
         },
-        {
-          "name": "Get All Roles",
-          "request": {
-            "method": "GET",
-            "url": "{{baseUrl}}/roles"
-          },
-          "response": []
-        },
-        {
-          "name": "Get Role by ID",
-          "request": {
-            "method": "GET",
-            "url": "{{baseUrl}}/roles/1"
-          },
-          "response": []
-        },
-        {
-          "name": "Update Role",
-          "request": {
-            "method": "PUT",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\"roleName\":\"ROLE_ADMIN\"}"
-            },
-            "url": "{{baseUrl}}/roles/1"
-          },
-          "response": []
-        },
-        {
-          "name": "Delete Role",
-          "request": {
-            "method": "DELETE",
-            "url": "{{baseUrl}}/roles/1"
-          },
-          "response": []
+        "url": {
+          "raw": "http://localhost:8080/api/auth/signup",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "auth",
+            "signup"
+          ]
         }
-      ]
+      },
+      "response": []
+    },
+    {
+      "name": "Validate Token",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer your_jwt_token"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:8080/api/auth/validate",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "auth",
+            "validate"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get User Details",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer your_jwt_token"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:8080/api/auth/user",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "auth",
+            "user"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get User by ID",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer your_jwt_token"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:8080/api/auth/users/{userId}",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "auth",
+            "users",
+            "{userId}"
+          ]
+        }
+      },
+      "response": []
     }
   ]
 }

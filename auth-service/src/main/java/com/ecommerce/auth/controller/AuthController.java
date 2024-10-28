@@ -1,5 +1,6 @@
 package com.ecommerce.auth.controller;
 
+import com.ecommerce.auth.dao.UserDAO;
 import com.ecommerce.auth.model.AppRole;
 import com.ecommerce.auth.model.Role;
 import com.ecommerce.auth.model.User;
@@ -12,6 +13,7 @@ import com.ecommerce.auth.security.response.MessageResponse;
 import com.ecommerce.auth.security.response.UserInfoResponse;
 import com.ecommerce.auth.security.services.UserDetailsImpl;
 import jakarta.validation.Valid;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -25,6 +27,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -43,6 +46,9 @@ public class AuthController {
 
     @Autowired
     RoleRepository roleRepository;
+
+    @Autowired
+    private ModelMapper modelMapper;
 
     @Autowired
     PasswordEncoder encoder;
@@ -132,5 +138,12 @@ public class AuthController {
                 userDetails.getUsername(), roles);
 
         return ResponseEntity.ok().body(response);
+    }
+
+    @GetMapping("/users/{userId}")
+    public ResponseEntity<UserDAO> getUserDetails(@PathVariable Long userId) {
+        Optional<User> user = userRepository.findById(userId);
+        UserDAO userDAO = modelMapper.map(user.get(), UserDAO.class);
+        return ResponseEntity.ok(userDAO);
     }
 }

@@ -4,23 +4,23 @@ import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
+
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-@Table("users")
-public class User {
+@Table("user_address")
+public class UserAddress {
     @Id
-    private Long id; // Change to Long if `user_id` is Long
+    private Long id; // Assuming you might want an ID for this table as well
 
-    @Column("user_id")
+    @Column("user_id")  // Ensure the column name matches
     private Long userId;
 
-    @Column("username") // Correct casing
-    private String userName;
-
-    @Column("email") // Correct casing
-    private String email;
+    @Column("address_id") // Ensure the column name matches
+    private Long addressId;
 }
+
+
 
