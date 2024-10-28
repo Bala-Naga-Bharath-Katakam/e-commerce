@@ -1,0 +1,16 @@
+server:
+  port: 6060
+spring:
+  application:
+    name: category-service
+  datasource:
+    url: r2dbc:postgresql://localhost:5432/ecommerce_db
+    username: postgres
+    password: postgres
+  h2:
+    console:
+      enabled: true
+  r2dbc:
+    url: r2dbc:postgresql://localhost:5432/ecommerce_db
+    username: postgres
+    password: postgres

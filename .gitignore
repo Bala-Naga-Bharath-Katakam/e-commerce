@@ -27,3 +27,11 @@ orders-service/.gitattributes
 eureka-server/.mvn/wrapper/maven-wrapper.properties
 eureka-server/mvnw
 eureka-server/mvnw.cmd
+category-service/.gitattributes
+category-service/.mvn/wrapper/maven-wrapper.properties
+category-service/mvnw
+category-service/mvnw.cmd
+user-address-service/.gitattributes
+user-address-service/.mvn/wrapper/maven-wrapper.properties
+user-address-service/mvnw
+user-address-service/mvnw.cmd

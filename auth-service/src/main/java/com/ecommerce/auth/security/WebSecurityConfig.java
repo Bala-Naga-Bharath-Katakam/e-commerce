@@ -103,8 +103,7 @@ public class WebSecurityConfig {
                 "/webjars/**"));
     }
 
-
-    @Bean
+    // Add Bean annotation if we need initial data
     public CommandLineRunner initData(RoleRepository roleRepository, UserRepository userRepository, PasswordEncoder passwordEncoder) {
         return args -> {
             // Retrieve or create roles
