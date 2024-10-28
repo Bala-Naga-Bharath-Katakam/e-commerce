@@ -1,74 +1,75 @@
 {
   "info": {
-    "name": "Product Controller API with Auth",
-    "_postman_id": "12345-6789-0123-4567",
-    "description": "Collection for ProductController endpoints in eCommerce app with token-based authentication",
+    "name": "Product API Collection",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "item": [
     {
       "name": "Create Product",
       "request": {
-        "auth": {
-          "type": "bearer",
-          "bearer": [
-            {
-              "key": "token",
-              "value": "{{token}}",
-              "type": "string"
-            }
-          ]
-        },
         "method": "POST",
         "header": [
           {
             "key": "Authorization",
-            "value": "Bearer {{token}}",
-            "type": "text"
+            "type": "text",
+            "value": "Bearer <your_token_here>"
           },
           {
             "key": "Content-Type",
-            "value": "application/json",
-            "type": "text"
+            "type": "text",
+            "value": "application/json"
           }
         ],
+        "url": {
+          "raw": "http://localhost:8080/api/products",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8080",
+          "path": ["api", "products"]
+        },
         "body": {
           "mode": "raw",
-          "raw": "{\n    \"name\": \"Sample Product\",\n    \"price\": 100.0,\n    \"description\": \"Sample Description\"\n}"
-        },
-        "url": {
-          "raw": "{{baseUrl}}/products",
-          "host": ["{{baseUrl}}"],
-          "path": ["products"]
+          "raw": "{\n    \"name\": \"Product Name\",\n    \"description\": \"Product Description\",\n    \"price\": 10.99\n}"
         }
-      },
-      "response": []
+      }
     },
     {
-      "name": "Get Product by ID",
+      "name": "Get All Products",
       "request": {
-        "auth": {
-          "type": "bearer",
-          "bearer": [
-            {
-              "key": "token",
-              "value": "{{token}}",
-              "type": "string"
-            }
-          ]
-        },
         "method": "GET",
         "header": [
           {
             "key": "Authorization",
-            "value": "Bearer {{token}}",
-            "type": "text"
+            "type": "text",
+            "value": "Bearer <your_token_here>"
           }
         ],
         "url": {
-          "raw": "{{baseUrl}}/products/:id",
-          "host": ["{{baseUrl}}"],
-          "path": ["products", ":id"],
+          "raw": "http://localhost:8080/api/products",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8080",
+          "path": ["api", "products"]
+        }
+      }
+    },
+    {
+      "name": "Get Product by ID",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "type": "text",
+            "value": "Bearer <your_token_here>"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:8080/api/products/:id",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8080",
+          "path": ["api", "products", ":id"],
           "variable": [
             {
               "key": "id",
@@ -76,47 +77,68 @@
             }
           ]
         }
-      },
-      "response": []
+      }
     },
     {
-      "name": "Get All Products",
+      "name": "Update Product",
       "request": {
-        "auth": {
-          "type": "bearer",
-          "bearer": [
-            {
-              "key": "token",
-              "value": "{{token}}",
-              "type": "string"
-            }
-          ]
-        },
-        "method": "GET",
+        "method": "PUT",
         "header": [
           {
             "key": "Authorization",
-            "value": "Bearer {{token}}",
-            "type": "text"
+            "type": "text",
+            "value": "Bearer <your_token_here>"
+          },
+          {
+            "key": "Content-Type",
+            "type": "text",
+            "value": "application/json"
           }
         ],
         "url": {
-          "raw": "{{baseUrl}}/products",
-          "host": ["{{baseUrl}}"],
-          "path": ["products"]
+          "raw": "http://localhost:8080/api/products/:id",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8080",
+          "path": ["api", "products", ":id"],
+          "variable": [
+            {
+              "key": "id",
+              "value": "1"
+            }
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"name\": \"Updated Product Name\",\n    \"description\": \"Updated Product Description\",\n    \"price\": 15.99\n}"
         }
-      },
-      "response": []
-    }
-  ],
-  "variable": [
-    {
-      "key": "baseUrl",
-      "value": "http://localhost:8080"
+      }
     },
     {
-      "key": "token",
-      "value": ""
+      "name": "Delete Product",
+      "request": {
+        "method": "DELETE",
+        "header": [
+          {
+            "key": "Authorization",
+            "type": "text",
+            "value": "Bearer <your_token_here>"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:8080/api/products/:id",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8080",
+          "path": ["api", "products", ":id"],
+          "variable": [
+            {
+              "key": "id",
+              "value": "1"
+            }
+          ]
+        }
+      }
     }
   ]
 }

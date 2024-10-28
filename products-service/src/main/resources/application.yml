@@ -1,21 +1,27 @@
 server:
-  port: 9090
+  port: 5050
 spring:
   application:
     name: products-service
   datasource:
-    url: jdbc:h2:mem:testdb
-    driver-class-name: org.h2.Driver
-    username: sa
-    password:
-  h2:
-    console:
-      enabled: true
+    url: r2dbc:postgresql://localhost:5432/ecommerce_db
+    username: postgres
+    password: postgres
   r2dbc:
-    generate-ddl: true
-    url: r2dbc:h2:mem:///testdb
-    username: sa
-    password:
-auth:
-  service:
-    url=http://localhost:8080:
+    url: r2dbc:postgresql://localhost:5432/ecommerce_db
+    username: postgres
+    password: postgres
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
+    registerWithEureka: true
+    fetchRegistry: true
+
+  instance:
+    preferIpAddress: true
+    ip-address: 127.0.0.1
+    nonSecurePort: 8080
+    leaseRenewalIntervalInSeconds: 30
+    leaseExpirationDurationInSeconds: 90
