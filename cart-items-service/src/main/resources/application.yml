@@ -1,10 +1,10 @@
 server:
-  port: 2020
+  port: 3030
 
 
 spring:
   application:
-    name: orders-service
+    name: cart-item-service
   datasource:
     url: r2dbc:postgresql://localhost:5432/ecommerce_db
     username: postgres

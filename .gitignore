@@ -35,3 +35,6 @@ user-address-service/.gitattributes
 user-address-service/.mvn/wrapper/maven-wrapper.properties
 user-address-service/mvnw
 user-address-service/mvnw.cmd
+cart-items-service/.gitattributes
+cart-items-service/mvnw
+cart-items-service/mvnw.cmd

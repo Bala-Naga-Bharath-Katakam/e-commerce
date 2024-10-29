@@ -1,0 +1,53 @@
+{
+  "info": {
+    "_postman_id": "f7a0c51b-4736-44e1-9c62-c5dbf1f8413f",
+    "name": "E-commerce Cart Item Service",
+    "description": "API collection for managing cart items in the e-commerce application.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Add Cart Item",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"cartId\": 1, \"productId\": 1, \"quantity\": 2, \"discount\": 5.0, \"productPrice\": 20.0}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/public/cart-items",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "public", "cart-items"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get Cart Items by Cart ID",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/public/cart-items/cart/{{cartId}}",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "public", "cart-items", "cart", "{{cartId}}"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Delete Cart Item",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/public/cart-items/{{cartItemId}}",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "public", "cart-items", "{{cartItemId}}"]
+        }
+      },
+      "response": []
+    }
+  ]
+}
