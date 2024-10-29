@@ -1,17 +1,29 @@
 server:
-  port: 8083
+  port: 4040
+
+
 spring:
   application:
     name: carts-service
   datasource:
-    url: jdbc:h2:mem:testdb
-    driver-class-name: org.h2.Driver
-    username: sa
-    password:
-  h2:
-    console:
-      enabled: true
+    url: r2dbc:postgresql://localhost:5432/ecommerce_db
+    username: postgres
+    password: postgres
   r2dbc:
-    url: r2dbc:h2:mem:///testdb
-    username: sa
-    password:
+    url: r2dbc:postgresql://localhost:5432/ecommerce_db
+    username: postgres
+    password: postgres
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
+    registerWithEureka: true
+    fetchRegistry: true
+
+  instance:
+    preferIpAddress: true
+    ip-address: 127.0.0.1
+    nonSecurePort: 8080
+    leaseRenewalIntervalInSeconds: 30
+    leaseExpirationDurationInSeconds: 90

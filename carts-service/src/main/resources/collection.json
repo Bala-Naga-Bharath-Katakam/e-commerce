@@ -1,0 +1,40 @@
+{
+  "info": {
+    "_postman_id": "d4e8c52e-bd99-4c5b-b8f4-7ab8c0a9a88a",
+    "name": "E-commerce Cart Service",
+    "description": "API collection for managing carts in the e-commerce application.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Create Cart",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"userId\": 1, \"cartItems\": []}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/public/carts",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "public", "carts"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get Cart by User ID",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/public/carts/{{userId}}",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "public", "carts", "{{userId}}"]
+        }
+      },
+      "response": []
+    }
+  ]
+}
