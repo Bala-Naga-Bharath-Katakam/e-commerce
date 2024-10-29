@@ -1,0 +1,51 @@
+{
+  "info": {
+    "_postman_id": "bde3a2b4-0f09-4e7e-baf5-63d07274dcd6",
+    "name": "Payment Service API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Create Payment",
+      "request": {
+        "url": "http://localhost:8080/api/payments",
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"amount\": 150.00, \"paymentMethod\": \"Credit Card\", \"orderId\": 1}"
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get Payment by ID",
+      "request": {
+        "url": "http://localhost:8080/api/payments/{{paymentId}}",
+        "method": "GET"
+      },
+      "response": []
+    },
+    {
+      "name": "Get All Payments",
+      "request": {
+        "url": "http://localhost:8080/api/payments",
+        "method": "GET"
+      },
+      "response": []
+    },
+    {
+      "name": "Delete Payment",
+      "request": {
+        "url": "http://localhost:8080/api/payments/{{paymentId}}",
+        "method": "DELETE"
+      },
+      "response": []
+    }
+  ]
+}

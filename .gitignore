@@ -38,3 +38,7 @@ user-address-service/mvnw.cmd
 cart-items-service/.gitattributes
 cart-items-service/mvnw
 cart-items-service/mvnw.cmd
+payments-service/.gitattributes
+payments-service/.mvn/wrapper/maven-wrapper.properties
+payments-service/mvnw
+payments-service/mvnw.cmd
