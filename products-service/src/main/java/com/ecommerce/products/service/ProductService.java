@@ -2,17 +2,21 @@ package com.ecommerce.products.service;
 
 import com.ecommerce.products.entity.Product;
 import com.ecommerce.products.entity.ProductDTO;
+import com.ecommerce.products.entity.ProductResponse;
 import com.ecommerce.products.exceptions.APIException;
 import com.ecommerce.products.exceptions.ResourceNotFoundException;
 import com.ecommerce.products.repository.ProductRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import reactor.core.publisher.Mono;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 
 import java.io.IOException;
 import java.util.List;
@@ -133,4 +137,45 @@ public class ProductService {
                             .map(savedProduct -> ResponseEntity.ok(modelMapper.map(savedProduct, ProductDTO.class)));
                 });
     }
+
+    /**
+     * Searches for products containing the given keyword in the product name, supporting pagination and sorting.
+     *
+     * @param keyword   the search keyword for product names
+     * @param pageNumber the page number for pagination
+     * @param pageSize  the number of products per page
+     * @param sortBy    the field to sort results by
+     * @param sortOrder the order of sorting (ascending or descending)
+     * @return a Mono containing the ProductResponse with matching products
+     */
+    public Mono<ProductResponse> searchProductByKeyword(String keyword, Integer pageNumber, Integer pageSize, String sortBy, String sortOrder) {
+        Sort sort = sortOrder.equalsIgnoreCase("asc")
+                ? Sort.by(sortBy).ascending()
+                : Sort.by(sortBy).descending();
+
+        Pageable pageable = PageRequest.of(pageNumber, pageSize, sort);
+
+        return productRepository.findByProductNameContainingIgnoreCase(keyword, pageable)
+                .collectList()
+                .flatMap(products -> {
+                    if (products.isEmpty()) {
+                        return Mono.error(new APIException("Products not found with keyword: " + keyword));
+                    }
+
+                    List<ProductDTO> productDTOS = products.stream()
+                            .map(product -> modelMapper.map(product, ProductDTO.class))
+                            .toList();
+
+                    ProductResponse productResponse = new ProductResponse();
+                    productResponse.setContent(productDTOS);
+                    productResponse.setPageNumber(pageNumber);
+                    productResponse.setPageSize(pageSize);
+                    productResponse.setTotalElements((long) products.size()); // Adjust based on a count query
+                    productResponse.setTotalPages((int) Math.ceil((double) products.size() / pageSize));
+                    productResponse.setLastPage(pageNumber >= productResponse.getTotalPages() - 1);
+                    return Mono.just(productResponse);
+                });
+    }
+
+
 }

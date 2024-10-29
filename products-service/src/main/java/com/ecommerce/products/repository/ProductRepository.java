@@ -1,6 +1,7 @@
 package com.ecommerce.products.repository;
 
 import com.ecommerce.products.entity.Product;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.r2dbc.repository.Query;
 import org.springframework.data.repository.reactive.ReactiveCrudRepository;
@@ -24,12 +25,13 @@ public interface ProductRepository extends ReactiveCrudRepository<Product, Long>
     Flux<Product> findByCategoryIdOrderByPriceAsc(Long categoryId);
 
     /**
-     * Finds products by a keyword in the product name, ignoring case.
+     * Finds products by their name using a case-insensitive search.
      *
-     * @param keyword the keyword to search for in the product name
-     * @param sort    the sorting order
-     * @return a Flux containing products with names matching the keyword
+     * @param productName the name of the product to search for
+     * @param pageable    pagination details
+     * @return a Flux of products matching the search criteria
      */
-    Flux<Product> findByProductNameContainingIgnoreCase(String keyword, Sort sort);
+    Flux<Product> findByProductNameContainingIgnoreCase(String productName, Pageable pageable);
+
 }
 

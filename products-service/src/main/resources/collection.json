@@ -93,6 +93,37 @@
         }
       },
       "response": []
+    },
+    {
+      "name": "Search Products by Keyword",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/public/products/keyword/{{keyword}}?pageNumber={{pageNumber}}&pageSize={{pageSize}}&sortBy={{sortBy}}&sortOrder={{sortOrder}}",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "public", "products", "keyword", "{{keyword}}"],
+          "query": [
+            {
+              "key": "pageNumber",
+              "value": "{{pageNumber}}"
+            },
+            {
+              "key": "pageSize",
+              "value": "{{pageSize}}"
+            },
+            {
+              "key": "sortBy",
+              "value": "{{sortBy}}"
+            },
+            {
+              "key": "sortOrder",
+              "value": "{{sortOrder}}"
+            }
+          ]
+        }
+      },
+      "response": []
     }
   ]
 }
