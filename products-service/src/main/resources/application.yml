@@ -1,5 +1,11 @@
 server:
   port: 5050
+
+
+
+project:
+  image: images/
+
 spring:
   application:
     name: products-service

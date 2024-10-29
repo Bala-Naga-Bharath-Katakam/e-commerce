@@ -4,34 +4,44 @@ import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
 /**
- * Represents a product in the eCommerce system.
+ * Entity representing a product in the eCommerce application.
  */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
 @Table("products")
 public class Product {
 
-    /** Unique identifier for the product. */
     @Id
+    @Column("product_id")
     private Long productId;
 
-    /** Name of the product. */
-    @Column("product_name")
+    @NotBlank
+    @Size(min = 3, message = "Product name must contain at least 3 characters")
     private String productName;
 
-    /** Description of the product. */
-    @Column("description")
+    private String image;
+
+    @NotBlank
+    @Size(min = 6, message = "Product description must contain at least 6 characters")
     private String description;
 
-    /** Price of the product. */
-    @Column("price")
-    private Double price;
+    private Integer quantity;
 
-    /** ID of the category this product belongs to. */
+    private double price;
+
+    private double discount;
+
+    private double specialPrice;
+
+    // categoryId and userId serve as foreign keys but are not direct relationships in R2DBC
     @Column("category_id")
     private Long categoryId;
+
+    @Column("seller_id")
+    private Long sellerId;
 }

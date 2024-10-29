@@ -1,86 +1,136 @@
 package com.ecommerce.products.service;
+
 import com.ecommerce.products.entity.Product;
+import com.ecommerce.products.entity.ProductDTO;
+import com.ecommerce.products.exceptions.APIException;
+import com.ecommerce.products.exceptions.ResourceNotFoundException;
 import com.ecommerce.products.repository.ProductRepository;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import reactor.core.publisher.Flux;
+import org.springframework.web.multipart.MultipartFile;
 import reactor.core.publisher.Mono;
 
+import java.io.IOException;
+import java.util.List;
+import java.util.stream.Collectors;
+
 /**
- * Service class for managing products.
+ * Service implementation for managing products.
  */
 @Service
 public class ProductService {
-
     @Autowired
     private ProductRepository productRepository;
 
+    @Autowired
+    private ModelMapper modelMapper;
+
+    @Autowired
+    private FileService fileService;
+
+    @Value("${project.image}")
+    private String path;
+
     /**
-     * Creates a new product.
+     * Adds a new product to the database.
      *
-     * @param product the product to be created
-     * @return a Mono containing the created product as ResponseEntity
+     * @param productDTO the product data transfer object
+     * @return ResponseEntity containing the saved ProductDTO
      */
-    public Mono<ResponseEntity<Product>> createProduct(Product product) {
+    public Mono<ResponseEntity<ProductDTO>> addProduct(ProductDTO productDTO) {
+        Product product = new Product();
+        product.setImage("default.png");
+        double specialPrice = product.getPrice() - ((product.getDiscount() * 0.01) * product.getPrice());
+        product.setSpecialPrice(specialPrice);
+
+        product.setProductName(productDTO.getProductName());
+        product.setImage(productDTO.getImage());
+        product.setDescription(productDTO.getDescription());
+        product.setQuantity(productDTO.getQuantity());
+        product.setPrice(productDTO.getPrice());
+        product.setDiscount(productDTO.getDiscount());
+        System.out.println("product "+product);
         return productRepository.save(product)
-                .map(savedProduct -> ResponseEntity.ok(savedProduct));
+                .map(savedProduct -> ResponseEntity.status(HttpStatus.CREATED)
+                        .body(modelMapper.map(savedProduct, ProductDTO.class)))
+                .switchIfEmpty(Mono.error(new APIException("Product already exists!")));
     }
 
     /**
-     * Retrieves all products.
+     * Retrieves all products from the database.
      *
-     * @return a Flux of ResponseEntity containing all products
+     * @return ResponseEntity containing the list of ProductDTOs
      */
-    public Flux<ResponseEntity<Product>> getAllProducts() {
+    public Mono<ResponseEntity<List<ProductDTO>>> getAllProducts() {
         return productRepository.findAll()
-                .map(ResponseEntity::ok)
-                .defaultIfEmpty(ResponseEntity.noContent().build());
-    }
-
-    /**
-     * Retrieves a product by its ID.
-     *
-     * @param productId the ID of the product to retrieve
-     * @return a Mono containing the product if found, otherwise 404 Not Found
-     */
-    public Mono<ResponseEntity<Product>> getProductById(Long productId) {
-        return productRepository.findById(productId)
-                .map(ResponseEntity::ok)
-                .defaultIfEmpty(ResponseEntity.notFound().build());
+                .collectList()
+                .map(products -> ResponseEntity.ok(products.stream()
+                        .map(product -> modelMapper.map(product, ProductDTO.class))
+                        .collect(Collectors.toList())));
     }
 
     /**
      * Updates an existing product.
      *
-     * @param productId the ID of the product to update
-     * @param product the new product data
-     * @return a Mono containing the updated product as ResponseEntity, or 404 Not Found if not found
+     * @param productId  the ID of the product to be updated
+     * @param productDTO the updated product data transfer object
+     * @return ResponseEntity containing the updated ProductDTO
      */
-    public Mono<ResponseEntity<Product>> updateProduct(Long productId, Product product) {
+    public Mono<ResponseEntity<ProductDTO>> updateProduct(Long productId, ProductDTO productDTO) {
         return productRepository.findById(productId)
+                .switchIfEmpty(Mono.error(new ResourceNotFoundException("Product", "productId", productId)))
                 .flatMap(existingProduct -> {
-                    existingProduct.setProductName(product.getProductName());
-                    existingProduct.setDescription(product.getDescription());
-                    existingProduct.setPrice(product.getPrice());
-                    existingProduct.setCategoryId(product.getCategoryId());
-                    return productRepository.save(existingProduct);
-                })
-                .map(ResponseEntity::ok)
-                .defaultIfEmpty(ResponseEntity.notFound().build());
+                    existingProduct.setProductName(productDTO.getProductName());
+                    existingProduct.setDescription(productDTO.getDescription());
+                    existingProduct.setQuantity(productDTO.getQuantity());
+                    existingProduct.setDiscount(productDTO.getDiscount());
+                    existingProduct.setPrice(productDTO.getPrice());
+                    existingProduct.setSpecialPrice(productDTO.getSpecialPrice());
+
+                    return productRepository.save(existingProduct)
+                            .map(savedProduct -> ResponseEntity.ok(modelMapper.map(savedProduct, ProductDTO.class)));
+                });
     }
 
     /**
-     * Deletes a product by its ID.
+     * Deletes a product from the database.
      *
-     * @param productId the ID of the product to delete
-     * @return a Mono containing ResponseEntity with a 204 No Content status if deleted, or 404 Not Found if not found
+     * @param productId the ID of the product to be deleted
+     * @return ResponseEntity containing the deleted ProductDTO
      */
-    public Mono<ResponseEntity<Void>> deleteProduct(Long productId) {
+    public Mono<ResponseEntity<ProductDTO>> deleteProduct(Long productId) {
         return productRepository.findById(productId)
-                .flatMap(existingProduct ->
-                        productRepository.delete(existingProduct)
-                                .then(Mono.just(ResponseEntity.noContent().<Void>build())))
-                .defaultIfEmpty(ResponseEntity.notFound().build());
+                .switchIfEmpty(Mono.error(new ResourceNotFoundException("Product", "productId", productId)))
+                .flatMap(product -> productRepository.delete(product)
+                        .then(Mono.just(ResponseEntity.ok(modelMapper.map(product, ProductDTO.class)))));
+    }
+
+    /**
+     * Updates the image of an existing product.
+     *
+     * @param productId the ID of the product
+     * @param image     the new image file
+     * @return ResponseEntity containing the updated ProductDTO
+     * @throws IOException if there is an error while uploading the image
+     */
+    public Mono<ResponseEntity<ProductDTO>> updateProductImage(Long productId, MultipartFile image) throws IOException {
+        return productRepository.findById(productId)
+                .switchIfEmpty(Mono.error(new ResourceNotFoundException("Product", "productId", productId)))
+                .flatMap(existingProduct -> {
+                    String fileName = null;
+                    try {
+                        fileName = fileService.uploadImage(path, image);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                    existingProduct.setImage(fileName);
+
+                    return productRepository.save(existingProduct)
+                            .map(savedProduct -> ResponseEntity.ok(modelMapper.map(savedProduct, ProductDTO.class)));
+                });
     }
 }
