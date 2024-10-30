@@ -1,14 +1,14 @@
 {
   "info": {
-    "_postman_id": "bde3a2b4-0f09-4e7e-baf5-63d07274dcd6",
-    "name": "Payment Service API",
+    "_postman_id": "f39a06b7-68f2-4f99-b5e5-c8e0e7e54b5c",
+    "name": "E-commerce Payment Service",
+    "description": "Postman collection for managing payments in the e-commerce application.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "item": [
     {
       "name": "Create Payment",
       "request": {
-        "url": "http://localhost:8080/api/payments",
         "method": "POST",
         "header": [
           {
@@ -18,7 +18,20 @@
         ],
         "body": {
           "mode": "raw",
-          "raw": "{\"amount\": 150.00, \"paymentMethod\": \"Credit Card\", \"orderId\": 1}"
+          "raw": "{\"orderId\":1,\"userId\":1,\"amount\":100.00,\"paymentMethod\":\"CREDIT_CARD\",\"status\":\"PENDING\"}"
+        },
+        "url": {
+          "raw": "http://localhost:8080/api/payments/create",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "payments",
+            "create"
+          ]
         }
       },
       "response": []
@@ -26,24 +39,160 @@
     {
       "name": "Get Payment by ID",
       "request": {
-        "url": "http://localhost:8080/api/payments/{{paymentId}}",
-        "method": "GET"
+        "method": "GET",
+        "url": {
+          "raw": "http://localhost:8080/api/payments/1",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "payments",
+            "1"
+          ]
+        }
       },
       "response": []
     },
     {
-      "name": "Get All Payments",
+      "name": "Get Payments by User ID",
       "request": {
-        "url": "http://localhost:8080/api/payments",
-        "method": "GET"
+        "method": "GET",
+        "url": {
+          "raw": "http://localhost:8080/api/payments/user/1",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "payments",
+            "user",
+            "1"
+          ]
+        }
       },
       "response": []
     },
     {
-      "name": "Delete Payment",
+      "name": "Cancel Payment",
       "request": {
-        "url": "http://localhost:8080/api/payments/{{paymentId}}",
-        "method": "DELETE"
+        "method": "PUT",
+        "url": {
+          "raw": "http://localhost:8080/api/payments/cancel/1",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "payments",
+            "cancel",
+            "1"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Refund Payment",
+      "request": {
+        "method": "PUT",
+        "url": {
+          "raw": "http://localhost:8080/api/payments/refund/1",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "payments",
+            "refund",
+            "1"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Update Payment Status",
+      "request": {
+        "method": "PATCH",
+        "url": {
+          "raw": "http://localhost:8080/api/payments/1/status?status=COMPLETED",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "payments",
+            "1",
+            "status"
+          ],
+          "query": [
+            {
+              "key": "status",
+              "value": "COMPLETED"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Add Payment Method",
+      "request": {
+        "method": "POST",
+        "url": {
+          "raw": "http://localhost:8080/api/payments/user/1/add-method?paymentMethod=CREDIT_CARD",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "payments",
+            "user",
+            "1",
+            "add-method"
+          ],
+          "query": [
+            {
+              "key": "paymentMethod",
+              "value": "CREDIT_CARD"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get User Payment Methods",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "http://localhost:8080/api/payments/user/1/methods",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "payments",
+            "user",
+            "1",
+            "methods"
+          ]
+        }
       },
       "response": []
     }

@@ -2,82 +2,125 @@ package com.ecommerce.payment.controller;
 
 import com.ecommerce.payment.entity.Payment;
 import com.ecommerce.payment.service.PaymentService;
-import lombok.RequiredArgsConstructor;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
-
 /**
- * REST controller for managing payments.
+ * REST controller for managing payments in the e-commerce application.
  */
 @RestController
 @RequestMapping("/api/payments")
-@RequiredArgsConstructor
+@Tag(name = "Payment Service", description = "Manage payments in the e-commerce application")
 public class PaymentController {
 
     private final PaymentService paymentService;
 
+    @Autowired
+    public PaymentController(PaymentService paymentService) {
+        this.paymentService = paymentService;
+    }
+
     /**
-     * Creates a new payment.
+     * Endpoint to create a new payment for an order.
      *
-     * @param payment the payment to create
-     * @return a ResponseEntity containing the created payment
+     * @param payment The payment information to be created.
+     * @return A Mono containing the ResponseEntity with the created Payment.
      */
-    @PostMapping
-    @Operation(summary = "Create a new payment", description = "Creates a new payment in the system.")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Payment created successfully"),
-            @ApiResponse(responseCode = "400", description = "Invalid payment request")
-    })
+    @Operation(summary = "Create a new payment for an order")
+    @PostMapping("/create")
     public Mono<ResponseEntity<Payment>> createPayment(@RequestBody Payment payment) {
         return paymentService.createPayment(payment);
     }
 
     /**
-     * Retrieves a payment by its ID.
+     * Endpoint to retrieve a payment by its ID.
      *
-     * @param paymentId the ID of the payment to retrieve
-     * @return a ResponseEntity containing the payment if found, or not found
+     * @param paymentId The ID of the payment.
+     * @return A Mono containing the ResponseEntity with the requested Payment.
      */
+    @Operation(summary = "Get payment by ID")
     @GetMapping("/{paymentId}")
-    @Operation(summary = "Get payment by ID", description = "Retrieves a payment using its unique ID.")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Payment retrieved successfully"),
-            @ApiResponse(responseCode = "404", description = "Payment not found")
-    })
     public Mono<ResponseEntity<Payment>> getPaymentById(@PathVariable Long paymentId) {
         return paymentService.getPaymentById(paymentId);
     }
 
     /**
-     * Retrieves all payments.
+     * Endpoint to get all payments made by a specific user.
      *
-     * @return a Flux of payments
+     * @param userId The ID of the user.
+     * @return A Flux of payments made by the specified user.
      */
-    @GetMapping
-    @Operation(summary = "Get all payments", description = "Retrieves a list of all payments in the system.")
-    public Flux<Payment> getAllPayments() {
-        return paymentService.getAllPayments();
+    @Operation(summary = "Get all payments for a specific user")
+    @GetMapping("/user/{userId}")
+    public Flux<ResponseEntity<Payment>> getPaymentsByUserId(@PathVariable Long userId) {
+        return paymentService.getPaymentsByUserId(userId);
     }
 
     /**
-     * Deletes a payment by its ID.
+     * Endpoint to cancel a payment by its ID.
      *
-     * @param paymentId the ID of the payment to delete
-     * @return a ResponseEntity indicating the result of the operation
+     * @param paymentId The ID of the payment to be canceled.
+     * @return A Mono containing the ResponseEntity with the updated Payment.
      */
-    @DeleteMapping("/{paymentId}")
-    @Operation(summary = "Delete payment", description = "Deletes a payment using its unique ID.")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "204", description = "Payment deleted successfully"),
-            @ApiResponse(responseCode = "404", description = "Payment not found")
-    })
-    public Mono<ResponseEntity<Object>> deletePayment(@PathVariable Long paymentId) {
-        return paymentService.deletePayment(paymentId);
+    @Operation(summary = "Cancel a payment by ID")
+    @PutMapping("/cancel/{paymentId}")
+    public Mono<ResponseEntity<Payment>> cancelPayment(@PathVariable Long paymentId) {
+        return paymentService.cancelPayment(paymentId);
+    }
+
+    /**
+     * Endpoint to refund a payment by its ID.
+     *
+     * @param paymentId The ID of the payment to be refunded.
+     * @return A Mono containing the ResponseEntity with the updated Payment.
+     */
+    @Operation(summary = "Refund a payment by ID")
+    @PutMapping("/refund/{paymentId}")
+    public Mono<ResponseEntity<Payment>> refundPayment(@PathVariable Long paymentId) {
+        return paymentService.refundPayment(paymentId);
+    }
+
+    /**
+     * Endpoint to update the status of a payment by its ID.
+     *
+     * @param paymentId The ID of the payment.
+     * @param status    The new status for the payment.
+     * @return A Mono containing the ResponseEntity with the updated Payment.
+     */
+    @Operation(summary = "Update payment status by ID")
+    @PatchMapping("/{paymentId}/status")
+    public Mono<ResponseEntity<Payment>> updatePaymentStatus(@PathVariable Long paymentId, @RequestParam String status) {
+        return paymentService.updatePaymentStatus(paymentId, status);
+    }
+
+    /**
+     * Endpoint to add a new payment method for the user.
+     *
+     * @param userId        The ID of the user.
+     * @param paymentMethod The payment method to be added.
+     * @return A Mono containing the ResponseEntity indicating the operation's success.
+     */
+    @Operation(summary = "Add a payment method for the user")
+    @PostMapping("/user/{userId}/add-method")
+    public Mono<ResponseEntity<Void>> addPaymentMethod(@PathVariable Long userId, @RequestParam String paymentMethod) {
+        return paymentService.addPaymentMethod(userId, paymentMethod);
+    }
+
+    /**
+     * Endpoint to retrieve all payment methods for a specific user.
+     *
+     * @param userId The ID of the user.
+     * @return A Flux of payment methods associated with the specified user.
+     */
+    @Operation(summary = "List all payment methods for the user")
+    @GetMapping("/user/{userId}/methods")
+    public Flux<ResponseEntity<String>> getUserPaymentMethods(@PathVariable Long userId) {
+        return paymentService.getUserPaymentMethods(userId)
+                .map(ResponseEntity::ok);
     }
 }
