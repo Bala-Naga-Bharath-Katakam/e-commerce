@@ -10,6 +10,8 @@ import reactor.core.publisher.Mono;
  */
 public interface PaymentService {
 
+    Mono<ResponseEntity<Payment>> initiatePaymentViaGateway(Payment payment);
+
     Mono<ResponseEntity<Payment>> createPayment(Payment payment);
 
     Mono<ResponseEntity<Payment>> getPaymentById(Long paymentId);

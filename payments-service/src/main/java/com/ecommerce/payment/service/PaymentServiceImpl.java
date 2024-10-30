@@ -15,6 +15,8 @@ import reactor.core.publisher.Mono;
 public class PaymentServiceImpl implements PaymentService {
 
     private final PaymentRepository paymentRepository;
+    private final PaymentGatewayService paymentGatewayService;
+
 
     /**
      * Constructor for PaymentServiceImpl.
@@ -22,8 +24,20 @@ public class PaymentServiceImpl implements PaymentService {
      * @param paymentRepository the payment repository for CRUD operations.
      */
     @Autowired
-    public PaymentServiceImpl(PaymentRepository paymentRepository) {
+    public PaymentServiceImpl(PaymentRepository paymentRepository, PaymentGatewayService paymentGatewayService) {
         this.paymentRepository = paymentRepository;
+        this.paymentGatewayService = paymentGatewayService;
+    }
+
+    @Override
+    public Mono<ResponseEntity<Payment>> initiatePaymentViaGateway(Payment payment) {
+        // Initiate the payment through the payment gateway
+        return paymentGatewayService.initiatePayment(payment.getAmount(), "usd", payment.getPaymentMethod(), "Payment for Order ID: " + payment.getOrderId())
+                .flatMap(transactionId -> {
+                    payment.setTransactionId(transactionId); // Set the transaction ID
+                    return paymentRepository.save(payment) // Save the payment to the database
+                            .map(ResponseEntity::ok);
+                });
     }
 
     /**

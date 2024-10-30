@@ -31,6 +31,18 @@ public class PaymentController {
      * @param payment The payment information to be created.
      * @return A Mono containing the ResponseEntity with the created Payment.
      */
+    @Operation(summary = "Initiate a new payment for an order")
+    @PostMapping("/initiate/payment")
+    public Mono<ResponseEntity<Payment>> initiatePayment(@RequestBody Payment payment) {
+        return paymentService.initiatePaymentViaGateway(payment);
+    }
+
+    /**
+     * Endpoint to create a new payment for an order.
+     *
+     * @param payment The payment information to be created.
+     * @return A Mono containing the ResponseEntity with the created Payment.
+     */
     @Operation(summary = "Create a new payment for an order")
     @PostMapping("/create")
     public Mono<ResponseEntity<Payment>> createPayment(@RequestBody Payment payment) {
