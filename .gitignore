@@ -42,3 +42,7 @@ payments-service/.gitattributes
 payments-service/.mvn/wrapper/maven-wrapper.properties
 payments-service/mvnw
 payments-service/mvnw.cmd
+quarkus-payments-service/.mvn/wrapper/maven-wrapper.properties
+quarkus-payments-service/.mvn/wrapper/MavenWrapperDownloader.java
+quarkus-payments-service/mvnw
+quarkus-payments-service/mvnw.cmd
